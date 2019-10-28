@@ -133,7 +133,11 @@
                 },
                 run: function(e) {
 
+                    if(this.isWork) return;
+
                     this.isWork = true;
+
+                    this.buttonText = 'Вычисления...';
 
                     this.yi = this.yiData.replace(/\r\n/g, '\n').replace(/,/g, '.').trim().split('\n');
 
@@ -162,24 +166,31 @@
 
                     var nm = new NM(this.ti, this.yi, f, func, this.fixed);
 
-                    for (i = 0; i < this.epochs; i++)
-                    {
-                        var p = x.slice(0);
+                    var that = this;
 
-                        x = nm.optimize(x);
+                    setTimeout(function() {
 
-                        if(nm.norma(x, p) < 1E-6) break;
-                    }
+                        for (i = 0; i < that.epochs; i++)
+                        {
+                            var p = x.slice(0);
 
-                    this.a = math.round(x[0], 8);
-                    this.b = math.round(x[1], 8);
-                    this.c = math.round(x[2], 8);
-                    this.g = math.round(x[3], 8);
-                    this.h = math.round(x[4], 8);
+                            x = nm.optimize(x);
 
-                    draw(this.ti, this.yi, x, f, nm.i, nm.err(x));
+                            if(nm.norma(x, p) < 1E-6) break;
+                        }
 
-                    this.isWork = false;
+                        that.a = math.round(x[0], 8);
+                        that.b = math.round(x[1], 8);
+                        that.c = math.round(x[2], 8);
+                        that.g = math.round(x[3], 8);
+                        that.h = math.round(x[4], 8);
+
+                        draw(that.ti, that.yi, x, f, nm.i, nm.err(x));
+
+                        that.buttonText = 'Старт';
+                        that.isWork = false;
+
+                    }, 1000);
                 }
             }
         });
