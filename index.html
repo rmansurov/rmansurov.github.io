@@ -9,12 +9,31 @@
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
     <script src="https://cdn.jsdelivr.net/npm/mathjs@6.2.3/dist/math.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
+    <script src="http://fred-wang.github.io/mathjax.js/mpadded-min.js"></script>
     <style>
         #app {
             min-height: 100vh;
+            padding: 40px;
+        }
+        #app .btn {
+            line-height: 1;
         }
         textarea.form-control {
-            height: 500px;
+            height: 435px;
+        }
+        .form-group_multiplier .form-control {
+            display: inline-block;
+            max-width: 60px;
+            vertical-align: middle;
+        }
+        .form-group_report > * {
+            display: inline-block;
+            max-width: 40%;
+            vertical-align: middle;
+        }
+        .btn-success {
+            padding-left: 40px;
+            padding-right: 40px;
         }
     </style>
 </head>
@@ -26,45 +45,47 @@
                 
                 <div class="col-12 col-sm-2">
                     <div class="form-group">
-                        <label for="a">Параметр a</label>
-                        <input type="text" class="form-control" id="a" v-model:value="a">
+                        <label for="a">Параметр a:</label>
+                        <input type="text" class="form-control form-control-sm" id="a" v-model:value="a">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" value="0" id="a_fixed" v-model="fixed">
                             <label class="form-check-label" for="a_fixed">зафиксировать</label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="b">Параметр b</label>
-                        <input type="text" class="form-control" id="b" v-model:value="b">
+                        <label for="b">Параметр b:</label>
+                        <input type="text" class="form-control form-control-sm" id="b" v-model:value="b">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" value="1" id="b_fixed" v-model="fixed">
                             <label class="form-check-label" for="b_fixed">зафиксировать</label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="c">Параметр c</label>
-                        <input type="text" class="form-control" id="c" v-model:value="c">
+                        <label for="c">Параметр c:</label>
+                        <input type="text" class="form-control form-control-sm" id="c" v-model:value="c">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" value="2" id="c_fixed" v-model="fixed">
                             <label class="form-check-label" for="c_fixed">зафиксировать</label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="g">Параметр g</label>
-                        <input type="text" class="form-control" id="g" v-model:value="g">
+                        <label for="g">Параметр g:</label>
+                        <input type="text" class="form-control form-control-sm" id="g" v-model:value="g">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" value="3" id="g_fixed" v-model="fixed">
                             <label class="form-check-label" for="g_fixed">зафиксировать</label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="h">Параметр h</label>
-                        <input type="text" class="form-control" id="h" v-model:value="h">
+                        <label for="h">Параметр h:</label>
+                        <input type="text" class="form-control form-control-sm" id="h" v-model:value="h">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" value="4" id="h_fixed" v-model="fixed">
                             <label class="form-check-label" for="h_fixed">зафиксировать</label>
                         </div>
                     </div>
+                    <button type="button" v-on:click="reset1" class="btn btn-sm btn-warning" :disabled="isWork">сброс</button>
+                    <button type="button" v-on:click="reset2" class="btn btn-sm btn-primary" :disabled="isWork">сброс2</button>
                 </div>
                 <!-- <div class="col-12 col-sm-2">
                     <div class="form-group">
@@ -77,12 +98,100 @@
                         <label for="yiData">yi</label>
                         <textarea v-model:value="yiData" v-on:input="inputData" class="form-control" id="yiData"></textarea>
                     </div>
+                    <div class="form-group form-group_multiplier">
+                        <label for="multiplier">Коэффициент:</label>
+                        <input type="text" class="form-control form-control-sm" id="multiplier" v-model:value="multiplier">
+                        <button type="button" v-on:click="applyMultiplier" class="btn btn-sm btn-info" :disabled="isWork">Применить</button>
+                    </div>
                 </div>
                 <div class="col-12 col-sm-8">
+                    <div class="text-center">
+                        <br> 
+                        <math>
+
+                            <mi>y</mi><mfenced><mi>a</mi><mi>b</mi><mi>c</mi><mi>g</mi><mi>h</mi><mi>t</mi></mfenced>
+
+                            <mo>=</mo>
+
+                            <mn>1</mn><mo>-</mo>
+
+                            <msup>
+                                <mi>e</mi>
+                                <mrow>
+                                    <mo>-</mo>
+                                    <mi>a</mi>
+                                    
+                                    <msup>
+                                        <mi>t</mi>
+                                        <mn>2</mn>
+                                    </msup>
+                                    
+                                    <msup>
+                                        <mi>e</mi>
+                                        <mrow>
+                                            <mo>-</mo>
+                                            <mi>b</mi>
+                                            <mi>t</mi>
+                                        </mrow>
+                                    </msup>
+                            
+                                </mrow>
+                            </msup>
+                            
+                            <mo>+</mo>
+                            
+                            <mi>c</mi>
+                            <mo>(</mo>
+                            
+                            <mn>1</mn><mo>-</mo>
+
+                            <msup>
+                                <mi>e</mi>
+                                <mrow>
+                                    <mo>-</mo>
+                                    <msup>
+                                        <mi>t</mi>
+                                        <mn>3</mn>
+                                    </msup>
+                                    
+                                    <msup>
+                                        <mi>e</mi>
+                                        <mrow>
+                                            <mo>-</mo>
+                                            <mi>g</mi>
+                                            <mo>(</mo>
+                                            <mi>t</mi>
+                                            <mo>-</mo>
+                                            <mi>h</mi>
+                                            <mo>)</mo>
+                                        </mrow>
+                                    </msup>
+                            
+                                </mrow>
+                            </msup>
+
+                            <mo>)</mo>
+
+                        </math>
+                    </div>
                     <div id="plot"></div>
+                    <div class="form-group form-group_report">
+                        <div v-show="iters">
+                            <label for="iters">Итерации:</label>
+                            <input type="text" class="form-control form-control-sm" id="iters" v-model:value="iters">
+                        </div>
+                        <div v-show="err">
+                            <label for="err">Среднекв. ошибка:</label>
+                            <input type="text" class="form-control form-control-sm" id="err" v-model:value="err">
+                        </div>
+                        <div v-show="error">
+                            <label for="error">Относит. ошибка(%):</label>
+                            <input type="text" class="form-control form-control-sm" id="error" v-model:value="error">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-12 text-center">
-                    <button type="button" v-on:click="run" class="btn btn-primary" :disabled="isWork">{{ button }}</button>
+                <div class="col-12 text-center">                    
+                    <button type="button" v-on:click="run" class="btn btn-success" :disabled="isWork">{{ button }}</button>
                 </div>
             </div>
         </div>
@@ -109,6 +218,10 @@
                 buttonText: 'Старт',
                 isWork: false,
                 fixed: [],
+                multiplier: 1.0,
+                iters: 0,
+                err: 0.0,
+                error: 0.0,
             },
             computed: {
 
@@ -130,6 +243,95 @@
                     // }
 
                     // this.tiData = this.ti.join("\n");
+
+                    this.multiplier = 1.0;
+                },
+                applyMultiplier: function(e) {
+
+                    this.multiplier += '';
+
+                    this.multiplier = this.multiplier.replace(/,/g, '.').trim();
+
+                    if(!this.yiData) return;
+
+                    var yi = this.yiData.replace(/\r\n/g, '\n').replace(/,/g, '.').trim().split('\n');
+                    var i, yiData = '', N = yi.length;
+                    for (i = 0; i < N; i++) {
+                        yiData += math.multiply(+yi[i], this.multiplier) + "\n";
+                    }
+                    this.yiData = yiData;
+                },
+                reset1: function(e) {
+
+                    var params = [2.0, -2.0, 2.0, 10.0, 0.5];
+
+                    var k, N = params.length;
+                    for (k = 0; k < N; k++)
+                    {
+                        if(this.fixed.indexOf(k + '') != -1) {
+                            continue;
+                        }
+
+                        switch(k)
+                        {
+                            case 0:
+                                this.a = params[k];
+                                break;
+                            case 1:
+                                this.b = params[k];
+                                break;
+                            case 2:
+                                this.c = params[k];
+                                break;
+                            case 3:
+                                this.g = params[k];
+                                break;
+                            case 4:
+                                this.h = params[k];
+                                break;
+                        }
+                    }
+
+                    this.yiData = '';
+                    this.yi = [];
+                    this.tiData = '';
+                    this.ti = [];
+                },
+                reset2: function(e) {
+
+                    var params = [-2.0, 2.0, -2.0, 10.0, 0.5];
+
+                    var k, N = params.length;
+                    for (k = 0; k < N; k++)
+                    {
+                        if(this.fixed.indexOf(k + '') != -1) {
+                            continue;
+                        }
+
+                        switch(k)
+                        {
+                            case 0:
+                                this.a = params[k];
+                                break;
+                            case 1:
+                                this.b = params[k];
+                                break;
+                            case 2:
+                                this.c = params[k];
+                                break;
+                            case 3:
+                                this.g = params[k];
+                                break;
+                            case 4:
+                                this.h = params[k];
+                                break;
+                        }
+                    }
+
+                    this.yiData = '';
+                    this.yi = [];
+                    this.tiData = '';
+                    this.ti = [];
                 },
                 run: function(e) {
 
@@ -185,7 +387,11 @@
                         that.g = math.round(x[3], 8);
                         that.h = math.round(x[4], 8);
 
-                        draw(that.ti, that.yi, x, f, nm.i, nm.err(x));
+                        that.err = math.round(nm.err(x), 4);
+                        that.error = math.round(nm.error(x), 4);
+                        that.iters = nm.i;
+
+                        draw(that.ti, that.yi, x, f, nm.i, that.error);
 
                         that.buttonText = 'Старт';
                         that.isWork = false;
@@ -300,14 +506,32 @@
                 simplex.sort(comparer);
             }
 
-            // ошибка аппроксимации
+            // Среднеквадротичная ошибка аппроксимации
             this.err = function(x)
             {
                 var err = 0, i, N = this.yi.length;
                 for (i = 0; i < N; i++) {
                     err += math.pow(this.yi[i] - this.f(x, this.ti[i]), 2);
                 }
-                return err;
+                return math.sqrt(err / (N - 1));
+            }
+
+            // Относительная ошибка аппроксимации (%)
+            this.error = function(x)
+            {
+                var err = 0, i, zeroN = 0, N = this.yi.length;
+                for (i = 0; i < N; i++)
+                {
+                    var y = this.f(x, this.ti[i]);
+
+                    if(y == 0)
+                    {
+                        zeroN++;
+                        continue;
+                    }
+                    err += math.abs((y - this.yi[i]) / y);
+                }
+                return err / ( N - zeroN ) * 100;
             }
 
             // норма между точками ( векторами )
@@ -516,9 +740,9 @@
                     }
                 };
 
-                if(typeof iters != 'undefined' && typeof err != 'undefined') {
-                    layout.title = 'Количество итериций: ' + iters + ', ошибка: ' + math.round(err, 4);
-                }
+                // if(typeof iters != 'undefined' && typeof err != 'undefined') {
+                //     layout.title = 'Количество итериций: ' + iters + ', Среднекв. ошибка: ' + err + '%';
+                // }
 
                 Plotly.newPlot('plot', data, layout);
             }
