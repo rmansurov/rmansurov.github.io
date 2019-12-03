@@ -88,8 +88,8 @@
                             <label class="form-check-label" for="h_fixed">зафиксировать</label>
                         </div>
                     </div>
-                    <button type="button" v-on:click="reset1" class="btn btn-sm btn-warning" :disabled="isWork">сброс</button>
-                    <button type="button" v-on:click="reset2" class="btn btn-sm btn-primary" :disabled="isWork">сброс2</button>
+                    <button type="button" v-on:click="reset1" class="btn btn-sm btn-warning" :disabled="isWork">сброс+</button>
+                    <button type="button" v-on:click="reset2" class="btn btn-sm btn-primary" :disabled="isWork">сброс-</button>
                 </div>
                 <!-- <div class="col-12 col-sm-2">
                     <div class="form-group">
@@ -202,6 +202,7 @@
     </div>
 
     <script>
+
         new Vue({
             el: '#app',
             data: {
@@ -526,7 +527,8 @@
                 var err = 0, i, zeroN = 0, N = this.yi.length;
                 for (i = 0; i < N; i++)
                 {
-                    var y = this.f(x, this.ti[i]);
+					var y = math.round(this.f(x, this.ti[i]), 8);
+					y += 0.001;
 
                     if(y == 0)
                     {
