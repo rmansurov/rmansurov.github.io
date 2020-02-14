@@ -185,11 +185,11 @@
                             <input type="text" class="form-control form-control-sm" id="iters" v-model:value="iters">
                         </div>
                         <div v-show="err">
-                            <label for="err">Среднекв. ошибка:</label>
+                            <label for="err">Среднекв. отклонение:</label>
                             <input type="text" class="form-control form-control-sm" id="err" v-model:value="err">
                         </div>
                         <div v-show="error">
-                            <label for="error">Относит. ошибка(%):</label>
+                            <label for="error">Относит. отклонение(%):</label>
                             <input type="text" class="form-control form-control-sm" id="error" v-model:value="error">
                         </div>
                     </div>
@@ -747,7 +747,7 @@
                 };
 
                 // if(typeof iters != 'undefined' && typeof err != 'undefined') {
-                //     layout.title = 'Количество итериций: ' + iters + ', Среднекв. ошибка: ' + err + '%';
+                //     layout.title = 'Количество итериций: ' + iters + ', Среднекв. отклонение: ' + err + '%';
                 // }
 
                 Plotly.newPlot('plot', data, layout);
